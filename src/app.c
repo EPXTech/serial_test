@@ -43,6 +43,8 @@
 // Buffer to hold received data
 uint8_t uartRxBuffer[UART_BUFFER_SIZE];
 
+static uint8_t counter = 0; // Counter variable
+
 // Flag to indicate UART data reception
 volatile bool uartDataReady = false;
 
@@ -70,7 +72,11 @@ void UART_ReadCallback(uintptr_t context)
 // Timer callback function for periodic UART transmission
 void TimerCallback(uintptr_t context)
 {
-    uartPeriodicTransmit = true;
+    // Send the counter value over UART
+    SERCOM3_USART_Write(&counter, 1);
+
+    // Increment the counter
+    counter++;
 }
 
 // *****************************************************************************
@@ -103,9 +109,12 @@ void APP_Initialize ( void )
     // Start UART read operation
     SERCOM3_USART_Read(uartRxBuffer, sizeof(uartRxBuffer));
 
-    // Start the timer for periodic UART transmission
-    SYS_TIME_HANDLE timerHandle = SYS_TIME_CallbackRegisterMS(TimerCallback, (uintptr_t)NULL, UART_PERIODIC_MESSAGE_INTERVAL_MS, SYS_TIME_PERIODIC);
-
+    // Register the Timer callback to periodically send UART messages
+    SYS_TIME_HANDLE timerHandle = SYS_TIME_CallbackRegisterMS(TimerCallback, 
+                                (uintptr_t)NULL, 
+                                UART_PERIODIC_MESSAGE_INTERVAL_MS, 
+                                SYS_TIME_PERIODIC);
+    
     if (timerHandle == SYS_TIME_HANDLE_INVALID)
     {
         // Handle timer creation error
@@ -148,14 +157,6 @@ void APP_Tasks ( void )
                 uartDataReady = false;
                 SERCOM3_USART_Write(uartRxBuffer, sizeof(uartRxBuffer));
                 SERCOM3_USART_Read(uartRxBuffer, sizeof(uartRxBuffer));
-            }
-
-            // Check if it's time to send the periodic message
-            if (uartPeriodicTransmit)
-            {
-                uartPeriodicTransmit = false;
-                char periodicMessage[] = "Periodic UART Message.\r\n";
-                SERCOM3_USART_Write(periodicMessage, sizeof(periodicMessage) - 1);
             }
 
             break;
