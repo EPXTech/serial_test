@@ -51,11 +51,14 @@
 #include "peripheral/sercom/usart/plib_sercom3_usart.h"
 #include "peripheral/nvmctrl/plib_nvmctrl.h"
 #include "peripheral/evsys/plib_evsys.h"
-#include "driver/usart/drv_usart.h"
 #include "peripheral/port/plib_port.h"
 #include "peripheral/clock/plib_clock.h"
 #include "peripheral/nvic/plib_nvic.h"
 #include "peripheral/cmcc/plib_cmcc.h"
+#include "peripheral/rtc/plib_rtc.h"
+#include "system/time/sys_time.h"
+#include "bsp/bsp.h"
+#include "driver/usart/drv_usart.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "system/int/sys_int.h"
@@ -194,6 +197,7 @@ Remarks:
 typedef struct
 {
     SYS_MODULE_OBJ  drvUsart0;
+    SYS_MODULE_OBJ  sysTime;
 
 } SYSTEM_OBJECTS;
 

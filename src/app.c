@@ -36,13 +36,18 @@
 // *****************************************************************************
 // *****************************************************************************
 
+// Define buffer size and buffer
 #define UART_BUFFER_SIZE 100
+#define UART_PERIODIC_MESSAGE_INTERVAL_MS 1000  // Interval in milliseconds
 
 // Buffer to hold received data
 uint8_t uartRxBuffer[UART_BUFFER_SIZE];
 
 // Flag to indicate UART data reception
 volatile bool uartDataReady = false;
+
+// Flag to indicate periodic UART transmission
+volatile bool uartPeriodicTransmit = false;
 
 /* Application Data
    Holds application data
@@ -60,6 +65,12 @@ APP_DATA appData;
 void UART_ReadCallback(uintptr_t context)
 {
     uartDataReady = true;
+}
+
+// Timer callback function for periodic UART transmission
+void TimerCallback(uintptr_t context)
+{
+    uartPeriodicTransmit = true;
 }
 
 // *****************************************************************************
@@ -84,14 +95,23 @@ void UART_ReadCallback(uintptr_t context)
 
 void APP_Initialize ( void )
 {
-    /* Place the App state machine in its initial state. */
     appData.state = APP_STATE_INIT;
 
-    /* Register the UART read callback function */
+    // Register the UART read callback function
     SERCOM3_USART_ReadCallbackRegister(UART_ReadCallback, (uintptr_t)NULL);
 
-    /* Start UART read operation */
+    // Start UART read operation
     SERCOM3_USART_Read(uartRxBuffer, sizeof(uartRxBuffer));
+
+    // Start the timer for periodic UART transmission
+    SYS_TIME_HANDLE timerHandle = SYS_TIME_CallbackRegisterMS(TimerCallback, (uintptr_t)NULL, UART_PERIODIC_MESSAGE_INTERVAL_MS, SYS_TIME_PERIODIC);
+
+    if (timerHandle == SYS_TIME_HANDLE_INVALID)
+    {
+        // Handle timer creation error
+        char errorMessage[] = "Failed to create timer.\r\n";
+        SERCOM3_USART_Write(errorMessage, sizeof(errorMessage) - 1);
+    }
 }
 
 /******************************************************************************
@@ -104,17 +124,14 @@ void APP_Initialize ( void )
 
 void APP_Tasks ( void )
 {
-    /* Check the application's current state. */
     switch ( appData.state )
     {
-        /* Application's initial state. */
         case APP_STATE_INIT:
         {
             bool appInitialized = true;
 
             if (appInitialized)
             {
-                // Send a welcome message via UART
                 char message[] = "UART Communication Initialized.\r\n";
                 SERCOM3_USART_Write(message, sizeof(message) - 1);
 
@@ -125,24 +142,27 @@ void APP_Tasks ( void )
 
         case APP_STATE_SERVICE_TASKS:
         {
-            // Check if UART data has been received
+            // Check if data is received
             if (uartDataReady)
             {
                 uartDataReady = false;
-
-                // Echo received data back
                 SERCOM3_USART_Write(uartRxBuffer, sizeof(uartRxBuffer));
-
-                // Reinitiate UART read
                 SERCOM3_USART_Read(uartRxBuffer, sizeof(uartRxBuffer));
             }
+
+            // Check if it's time to send the periodic message
+            if (uartPeriodicTransmit)
+            {
+                uartPeriodicTransmit = false;
+                char periodicMessage[] = "Periodic UART Message.\r\n";
+                SERCOM3_USART_Write(periodicMessage, sizeof(periodicMessage) - 1);
+            }
+
             break;
         }
 
-        /* The default state should never be executed. */
         default:
         {
-            /* Handle error in application's state machine. */
             break;
         }
     }

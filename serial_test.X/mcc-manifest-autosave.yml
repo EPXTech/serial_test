@@ -2,7 +2,7 @@
 
 manifest_file_version: 1.0.0
 project: serial_test
-creation_date: 2024-08-08T17:02:57.133-06:00[America/Denver]
+creation_date: 2024-08-08T17:15:23.736-06:00[America/Denver]
 operating_system: Windows 10
 mcc_mode: IDE
 mcc_mode_version: v6.20
@@ -21,4 +21,5 @@ modules:
 - {name: csp, type: HARMONY, version: v3.18.4}
 - {name: core, type: HARMONY, version: v3.13.3}
 - {name: CMSIS_5, type: HARMONY, version: 5.9.0}
+- {name: bsp, type: HARMONY, version: v3.18.0}
 - {name: CMSIS-FreeRTOS, type: HARMONY, version: v10.5.1}

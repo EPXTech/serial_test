@@ -172,6 +172,23 @@ SYSTEM_OBJECTS sysObj;
 // Section: System Initialization
 // *****************************************************************************
 // *****************************************************************************
+// <editor-fold defaultstate="collapsed" desc="SYS_TIME Initialization Data">
+
+static const SYS_TIME_PLIB_INTERFACE sysTimePlibAPI = {
+    .timerCallbackSet = (SYS_TIME_PLIB_CALLBACK_REGISTER)RTC_Timer32CallbackRegister,
+    .timerStart = (SYS_TIME_PLIB_START)RTC_Timer32Start,
+    .timerStop = (SYS_TIME_PLIB_STOP)RTC_Timer32Stop,
+    .timerFrequencyGet = (SYS_TIME_PLIB_FREQUENCY_GET)RTC_Timer32FrequencyGet,
+    .timerPeriodSet = (SYS_TIME_PLIB_PERIOD_SET)NULL,
+};
+
+static const SYS_TIME_INIT sysTimeInitData =
+{
+    .timePlib = &sysTimePlibAPI,
+    .hwTimerIntNum = RTC_IRQn,
+};
+
+// </editor-fold>
 
 
 
@@ -213,6 +230,9 @@ void SYS_Initialize ( void* data )
 
     EVSYS_Initialize();
 
+    RTC_Initialize();
+
+	BSP_Initialize();
 
 
     /* MISRAC 2012 deviation block start */
@@ -223,6 +243,12 @@ void SYS_Initialize ( void* data )
     sysObj.drvUsart0 = DRV_USART_Initialize(DRV_USART_INDEX_0, (SYS_MODULE_INIT *)&drvUsart0InitData);
 
 
+    /* MISRA C-2012 Rule 11.3, 11.8 deviated below. Deviation record ID -  
+    H3_MISRAC_2012_R_11_3_DR_1 & H3_MISRAC_2012_R_11_8_DR_1*/
+        
+    sysObj.sysTime = SYS_TIME_Initialize(SYS_TIME_INDEX_0, (SYS_MODULE_INIT *)&sysTimeInitData);
+    
+    /* MISRAC 2012 deviation block end */
 
 
     /* MISRAC 2012 deviation block end */

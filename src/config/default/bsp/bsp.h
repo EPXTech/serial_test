@@ -1,21 +1,18 @@
 /*******************************************************************************
-  System Configuration Header
+  Board Support Package Header File.
+
+  Company:
+    Microchip Technology Inc.
 
   File Name:
-    configuration.h
+    bsp.h
 
   Summary:
-    Build-time configuration header for the system defined by this project.
+    Board Support Package Header File 
 
   Description:
-    An MPLAB Project may have multiple configurations.  This file defines the
-    build-time options for a single configuration.
-
-  Remarks:
-    This configuration header must not define any prototypes or data
-    definitions (or include any files that do).  It only provides macro
-    definitions for build-time configuration options
-
+    This file contains constants, macros, type definitions and function
+    declarations 
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -43,85 +40,85 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef CONFIGURATION_H
-#define CONFIGURATION_H
+#ifndef BSP_H
+#define BSP_H
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/*  This section Includes other configuration headers necessary to completely
-    define this configuration.
-*/
 
-#include "user.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
 #include "device.h"
 
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
-
-extern "C" {
-
-#endif
-// DOM-IGNORE-END
-
 // *****************************************************************************
 // *****************************************************************************
-// Section: System Configuration
+// Section: BSP Macros
 // *****************************************************************************
 // *****************************************************************************
+#define sam_e54_xpro
+#define BSP_NAME             "sam_e54_xpro"
 
 
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: System Service Configuration
-// *****************************************************************************
-// *****************************************************************************
-/* TIME System Service Configuration Options */
-#define SYS_TIME_INDEX_0                            (0)
-#define SYS_TIME_MAX_TIMERS                         (5)
-#define SYS_TIME_HW_COUNTER_WIDTH                   (32)
-#define SYS_TIME_TICK_FREQ_IN_HZ                    (512)
+/*** LED Macros for LED ***/
+#define LED_Toggle()     (PORT_REGS->GROUP[2].PORT_OUTTGL = 1UL << 18)
+#define LED_On()         (PORT_REGS->GROUP[2].PORT_OUTCLR = 1UL << 18)
+#define LED_Off()        (PORT_REGS->GROUP[2].PORT_OUTSET = 1UL << 18)
+
+/*** SWITCH Macros for SWITCH ***/
+#define SWITCH_Get()     ((PORT_REGS->GROUP[1].PORT_IN >> 31) & 0x01)
+#define SWITCH_STATE_PRESSED   0
+#define SWITCH_STATE_RELEASED  1
+
+
 
 
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Driver Configuration
-// *****************************************************************************
-// *****************************************************************************
-/* USART Driver Instance 0 Configuration Options */
-#define DRV_USART_INDEX_0                  0
-#define DRV_USART_CLIENTS_NUMBER_IDX0      1
-#define DRV_USART_QUEUE_SIZE_IDX0          5
-
-/* USART Driver Global Configuration Options */
-#define DRV_USART_INSTANCES_NUMBER         1
-
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Middleware & Other Library Configuration
+// Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
 
-
 // *****************************************************************************
-// *****************************************************************************
-// Section: Application Configuration
-// *****************************************************************************
-// *****************************************************************************
+/* Function:
+    void BSP_Initialize(void)
 
+  Summary:
+    Performs the necessary actions to initialize a board
 
-//DOM-IGNORE-BEGIN
-#ifdef __cplusplus
-}
-#endif
-//DOM-IGNORE-END
+  Description:
+    This function initializes the LED and Switch ports on the board.  This
+    function must be called by the user before using any APIs present on this
+    BSP.
 
-#endif // CONFIGURATION_H
+  Precondition:
+    None.
+
+  Parameters:
+    None
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+    BSP_Initialize();
+    </code>
+
+  Remarks:
+    None
+*/
+
+void BSP_Initialize(void);
+
+#endif // BSP_H
+
 /*******************************************************************************
  End of File
 */
