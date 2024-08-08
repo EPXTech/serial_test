@@ -1,0 +1,4 @@
+build/
+dist/
+serial_test.X/.generated_files/
+nbproject/
