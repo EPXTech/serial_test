@@ -70,10 +70,10 @@ Pin Number,Pin ID,Custom Name,Function,Mode, Direction,Latch,Pull Up,Pull Down,D
 87,PB21,,Available,,,,,,NORMAL
 88,PA20,,Available,,,,,,NORMAL
 89,PA21,,Available,,,,,,NORMAL
-92,PA22,,SERCOM3_PAD0,Digital,High Impedance,n/a,No,No,NORMAL
-93,PA23,,SERCOM3_PAD1,Digital,High Impedance,n/a,No,No,NORMAL
-94,PA24,,SERCOM3_PAD2,Digital,High Impedance,n/a,No,No,NORMAL
-95,PA25,,SERCOM3_PAD3,Digital,High Impedance,n/a,No,No,NORMAL
+92,PA22,SERCOM3_TXD,SERCOM3_PAD0,Digital,High Impedance,n/a,No,No,NORMAL
+93,PA23,SERCOM3_RXD,SERCOM3_PAD1,Digital,High Impedance,n/a,No,No,NORMAL
+94,PA24,SERCOM3_NC0,SERCOM3_PAD2,Digital,High Impedance,n/a,No,No,NORMAL
+95,PA25,SERCOM3_NC1,SERCOM3_PAD3,Digital,High Impedance,n/a,No,No,NORMAL
 98,PB22,,Available,,,,,,NORMAL
 99,PB23,,Available,,,,,,NORMAL
 100,PB24,,Available,,,,,,NORMAL

@@ -65,6 +65,22 @@
 // *****************************************************************************
 // *****************************************************************************
 
+/*** Macros for SERCOM3_TXD pin ***/
+#define SERCOM3_TXD_Get()               (((PORT_REGS->GROUP[0].PORT_IN >> 22U)) & 0x01U)
+#define SERCOM3_TXD_PIN                  PORT_PIN_PA22
+
+/*** Macros for SERCOM3_RXD pin ***/
+#define SERCOM3_RXD_Get()               (((PORT_REGS->GROUP[0].PORT_IN >> 23U)) & 0x01U)
+#define SERCOM3_RXD_PIN                  PORT_PIN_PA23
+
+/*** Macros for SERCOM3_NC0 pin ***/
+#define SERCOM3_NC0_Get()               (((PORT_REGS->GROUP[0].PORT_IN >> 24U)) & 0x01U)
+#define SERCOM3_NC0_PIN                  PORT_PIN_PA24
+
+/*** Macros for SERCOM3_NC1 pin ***/
+#define SERCOM3_NC1_Get()               (((PORT_REGS->GROUP[0].PORT_IN >> 25U)) & 0x01U)
+#define SERCOM3_NC1_PIN                  PORT_PIN_PA25
+
 // *****************************************************************************
 /* PORT Group
 
